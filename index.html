@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Globotany</title>
+
+<!-- Anti-cache para navegadores teimosos -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
+<style>
+  :root{
+    --bg1:#0a3d62; --bg2:#3d9970; --txt:#eaf6f6; --muted:#b7d5d4;
+    --btn:#2e86de; --btnTxt:#fff; --btnGhost:#ffffff22; --card:#0e2f3fbb;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    color:var(--txt); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    overflow:hidden;
+  }
+
+  /* Splash (logo com entrada/saída suaves) */
+  .splash, .onboarding{position:absolute; inset:0; display:grid; place-items:center}
+  .splash{z-index:3}
+  .splash img{
+    width:min(320px,70vw); height:auto; opacity:0;
+    animation:fadeIn 1.8s ease forwards, fadeOut 1.2s ease forwards 3.2s;
+  }
+  @keyframes fadeIn{to{opacity:1}}
+  @keyframes fadeOut{to{opacity:0}}
+
+  /* Onboarding */
+  .onboarding{z-index:1; display:none; grid-template-rows:auto 1fr auto; padding:16px}
+  header{display:flex; align-items:center; gap:12px; padding:6px 4px}
+  header img.logo{height:28px}
+  header h1{font-size:18px; margin:0; letter-spacing:.4px}
+
+  .step{
+    height:100%; display:none; place-items:center; padding:8px;
+    animation:stepIn .35s ease;
+  }
+  .step.active{display:grid}
+  @keyframes stepIn{from{opacity:.2; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+  .card{
+    width:min(920px,100%); max-height:100%;
+    background:var(--card); border:1px solid #ffffff22; border-radius:18px;
+    box-shadow:0 10px 30px #00000033; overflow:auto; padding:14px 14px 88px;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Imagem SEM corte: ocupa a largura, respeita a altura, com moldura */
+  .hero-wrap{
+    width:100%; background:#00000033; border-radius:12px; padding:8px; margin-bottom:12px;
+  }
+  .hero{
+    display:block; width:100%; max-height:42vh; height:auto;
+    object-fit:contain; object-position:center center;
+    border-radius:8px; background:#00000020;
+  }
+
+  .title{font-size:20px; margin:4px 2px 8px}
+  .text{line-height:1.5; color:var(--muted); margin:0 2px}
+
+  /* Footer / controls */
+  .footer{
+    position:fixed; left:0; right:0; bottom:0;
+    display:flex; gap:10px; justify-content:center; align-items:center;
+    padding:12px; background:linear-gradient(180deg, #0000, #0006 30%, #000a);
+  }
+  button{
+    appearance:none; border:none; cursor:pointer; font-weight:600;
+    padding:12px 18px; border-radius:999px; transition:transform .05s ease;
+  }
+  button:active{transform:translateY(1px)}
+  .ghost{background:var(--btnGhost); color:var(--txt); border:1px solid #ffffff33}
+  .primary{background:var(--btn); color:var(--btnTxt)}
+  .hidden{display:none !important}
+
+  /* Progress dots */
+  .dots{position:fixed; right:12px; top:12px; display:flex; gap:6px; z-index:2}
+  .dot{width:8px; height:8px; border-radius:50%; background:#ffffff33}
+  .dot.active{background:#fff}
+</style>
+</head>
+<body>
+
+  <!-- Splash -->
+  <div class="splash" aria-hidden="true">
+    <img src="images/globotany-logo.png" alt="Globotany" />
+  </div>
+
+  <!-- Onboarding -->
+  <div class="onboarding" id="onboard" aria-live="polite">
+    <header>
+      <img class="logo" src="images/globotany-logo.png" alt="" />
+      <h1>Welcome to Globotany!</h1>
+    </header>
+
+    <div class="dots" aria-hidden="true">
+      <span class="dot" id="d0"></span><span class="dot" id="d1"></span><span class="dot" id="d2"></span><span class="dot" id="d3"></span>
+    </div>
+
+    <!-- Passo 1 -->
+    <section class="step active" data-step="0">
+      <div class="card">
+        <div class="hero-wrap">
+          <img class="hero" src="images/1000283168.jpg" alt="Comparador com barra central para escolher datas" />
+        </div>
+        <h2 class="title">1) Choose the region to analyze</h2>
+        <p class="text">
+          The function of Globotany is to analyze NASA images and assess the vegetation bloom year by year.
+Navigate the map by dragging, zoom with a pinch gesture, and position the area of interest.
+Due to image availability, the dates are fixed to <strong>2020</strong> and <strong>2023</strong>.
+When you are within the desired frame, tap <strong>Capture</strong> (button in the footer).
+        </p>
+      </div>
+    </section>
+
+    <!-- Passo 2 -->
+    <section class="step" data-step="1">
+      <div class="card">
+        <div class="hero-wrap">
+          <img class="hero" src="images/1000283170.jpg" alt="Tela mostrando captura e verificação de nuvens" />
+        </div>
+        <h2 class="title">2) Check if the capture is clean</h2>
+        <p class="text">
+          After tapping <strong>Capture</strong>, verify that the region has good visibility and low cloud cover.
+If everything is correct, tap <strong>Analyze</strong>. The analysis may take <em>more than a minute</em>.
+Wait without closing the page (the button is located in the footer).
+        </p>
+      </div>
+    </section>
+
+    <!-- Passo 3 -->
+    <section class="step" data-step="2">
+      <div class="card">
+        <div class="hero-wrap">
+          <img class="hero" src="images/1000283171.jpg" alt="Relatório gerado pela IA com opção de imprimir" />
+        </div>
+        <h2 class="title">3) Receive the AI ​​report</h2>
+        <p class="text">
+          Globotany's AI system generates a report comparing the images.
+With the result on the screen, you can <strong>export to PDF</strong> by tapping <strong>Print</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Passo 4 -->
+    <section class="step" data-step="3">
+      <div class="card">
+        <div class="hero-wrap">
+          <img class="hero" src="images/1000283172.jpg" alt="Diálogo do sistema para salvar PDF" />
+        </div>
+        <h2 class="title">4) Export the PDF</h2>
+        <p class="text">
+          Select a file name and save the AI-generated report. Done!
+        </p>
+      </div>
+    </section>
+
+    <div class="footer">
+      <button id="backBtn" class="ghost hidden" type="button">Back</button>
+      <button id="nextBtn" class="primary" type="button">Next</button>
+      <button id="goBtn" class="primary hidden" type="button" onclick="location.href='globotany.php'">Let's start</button>
+    </div>
+  </div>
+
+<script>
+  /* ========= Força recarga por versão (quebra cache) ========= */
+  const INDEX_VERSION = "2025-09-28-2";  // ↑ altere quando publicar nova versão
+  (function enforceVersion(){
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("v") !== INDEX_VERSION) {
+      url.searchParams.set("v", INDEX_VERSION);
+      // Usa replace para não poluir o histórico
+      window.location.replace(url.toString());
+    }
+  })();
+</script>
+
+<script>
+  // MOSTRAR ONBOARDING APÓS A ANIMAÇÃO DO LOGO (sem redirecionamento automático)
+  const splash = document.querySelector('.splash');
+  const onboarding = document.getElementById('onboard');
+
+  function showOnboarding(){
+    if (splash) splash.style.display = 'none';
+    if (onboarding) onboarding.style.display = 'grid';
+    updateDots(0);
+  }
+
+  // Fallback de tempo (fim do fadeOut ~ 4.6s)
+  let fallback = setTimeout(showOnboarding, 4600);
+
+  // Quando a animação do IMG terminar (dispara 2 vezes, no fim garantimos)
+  const splashImg = splash?.querySelector('img');
+  splashImg?.addEventListener('animationend', () => {
+    const op = getComputedStyle(splashImg).opacity;
+    if (op === '0'){
+      clearTimeout(fallback);
+      showOnboarding();
+    }
+  });
+
+  // Navegação dos passos
+  const steps = Array.from(document.querySelectorAll('.step'));
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const goBtn   = document.getElementById('goBtn');
+  let idx = 0;
+
+  function show(i){
+    steps.forEach((s,k)=>s.classList.toggle('active', k===i));
+    backBtn.classList.toggle('hidden', i===0);
+    nextBtn.classList.toggle('hidden', i===steps.length-1);
+    goBtn.classList.toggle('hidden', i!==steps.length-1);
+    updateDots(i);
+    idx = i;
+  }
+  function updateDots(i){
+    for(let k=0;k<steps.length;k++){
+      const d = document.getElementById('d'+k);
+      if(d) d.classList.toggle('active', k===i);
+    }
+  }
+  backBtn.addEventListener('click', ()=> show(Math.max(0, idx-1)));
+  nextBtn.addEventListener('click', ()=> show(Math.min(steps.length-1, idx+1)));
+
+  // Teclado: setas navegam (desktop)
+  window.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight') nextBtn.click();
+    if(e.key==='ArrowLeft')  backBtn.click();
+  });
+</script>
+</body>
+</html>
